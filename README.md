@@ -9,3 +9,9 @@ Javaの各種ライブラリを組み合わせたプロジェクトのテンプ�
 - Lombok
 - Gradle
 - flyway
+
+
+## 初期設定
+
+### SPRING INITIALIZR
+- https://start.spring.io/
