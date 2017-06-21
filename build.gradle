@@ -52,23 +52,27 @@ dependencies {
     domaGenRuntime 'com.h2database:h2'
 }
 
+task rundb << {
+	'h2'.execute()
+}
+
 flyway {
     user = 'sa'
     //url = 'jdbc:h2:./dummy' // Embedded
     url = 'jdbc:h2:tcp://localhost/~/dummy' // c/s
 }
 
-
+flywayMigrate.dependsOn rundb
 
 // doma-gen
 task gen << {
     ant.taskdef(resource: 'domagentask.properties',
         classpath: configurations.domaGenRuntime.asPath)
-    ant.gen(url: 'jdbc:h2:tcp://localhost/~/dummy', user: 'sa', password: '', ignoredTableNamePattern:'schema_version') {
-        entityConfig(packageName:'com.example.demo.repository.entity')
+    ant.gen(url: 'jdbc:h2:tcp://localhost/~/dummy', user: 'sa', password: '', ignoredTableNamePattern:'schema_version',templatePrimaryDir: 'doma-gen/template') {
+        entityConfig(packageName:'com.example.domain.repository.entity', overwrite: 'true')
         daoConfig(
-         packageName:'com.example.demo.repository.dao',
-         configClassName: 'com.example.demo.DomaConfig',
+         packageName:'com.example.domain.repository.dao',
+         configClassName: 'com.example.DomaConfig',
          overwrite: 'true')
         sqlConfig()
     }
