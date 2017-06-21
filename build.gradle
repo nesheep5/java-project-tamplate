@@ -20,19 +20,36 @@ apply plugin: 'org.flywaydb.flyway'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-repositories {
-	mavenCentral()
+configurations {
+    domaGenRuntime
 }
 
+repositories {
+	mavenCentral()
+    maven {url 'https://oss.sonatype.org/content/repositories/snapshots/'}
+}
+
+// doma利用のための設定
+// JavaクラスとSQLファイルの出力先ディレクトリを同じにする
+processResources.destinationDir = compileJava.destinationDir
+// コンパイルより前にSQLファイルを出力先ディレクトリにコピーするために依存関係を逆転する
+compileJava.dependsOn processResources
+// compileJava.options.compilerArgs = ['-Adoma.dao.subpackage=impl', '-Adoma.dao.suffix=Impl']
 
 dependencies {
 	compile('org.flywaydb:flyway-core')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.seasar.doma.boot:doma-spring-boot-starter:1.1.0')
+	compile group: 'org.seasar.doma', name: 'doma', version: '2.16.1'
+	
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile group: 'com.h2database', name: 'h2', version: '1.4.196'
+
+	// doma-gen
+    domaGenRuntime 'org.seasar.doma:doma-gen:2.16.1'
+    domaGenRuntime 'com.h2database:h2'
 }
 
 flyway {
@@ -40,3 +57,35 @@ flyway {
     //url = 'jdbc:h2:./dummy' // Embedded
     url = 'jdbc:h2:tcp://localhost/~/dummy' // c/s
 }
+
+
+
+// doma-gen
+task gen << {
+    ant.taskdef(resource: 'domagentask.properties',
+        classpath: configurations.domaGenRuntime.asPath)
+    ant.gen(url: 'jdbc:h2:tcp://localhost/~/dummy', user: 'sa', password: '', ignoredTableNamePattern:'schema_version') {
+        entityConfig(packageName:'com.example.demo.repository.entity')
+        daoConfig(
+         packageName:'com.example.demo.repository.dao',
+         configClassName: 'com.example.demo.DomaConfig',
+         overwrite: 'true')
+        sqlConfig()
+    }
+}
+gen.dependsOn flywayMigrate
+
+
+// doma-gen
+task genTestCases << {
+    ant.taskdef(resource: 'domagentask.properties',
+        classpath: configurations.domaGenRuntime.asPath)
+    ant.gen(url: 'jdbc:h2:tcp://localhost/~/dummy', user: 'sa', password: '') {
+        sqlTestCaseConfig {
+            fileset(dir: 'src/main/resources') {
+                include(name: 'META-INF/**/*.sql')
+            }
+        }
+    }
+}
+genTestCases.dependsOn flywayMigrate
