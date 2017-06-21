@@ -1,4 +1,4 @@
-package com.example.demo.repository.entity;
+package com.example.domain.repository.entity;
 
 import org.seasar.doma.jdbc.entity.EntityListener;
 import org.seasar.doma.jdbc.entity.PostDeleteContext;

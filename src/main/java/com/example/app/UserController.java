@@ -1,10 +1,10 @@
-package com.example.demo.controller;
+package com.example.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.domain.Users;
+import com.example.domain.model.Users;
 
 @RestController
 public class UserController {

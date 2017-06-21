@@ -1,4 +1,4 @@
-package com.example.demo.repository.entity;
+package com.example.domain.repository.entity;
 
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;

@@ -1,5 +1,7 @@
-package com.example.demo.repository.dao;
+package com.example.domain.repository.dao;
 
+import com.example.DomaConfig;
+import com.example.domain.repository.entity.User;
 import org.seasar.doma.Dao;
 import org.seasar.doma.Delete;
 import org.seasar.doma.Insert;
@@ -7,13 +9,10 @@ import org.seasar.doma.Select;
 import org.seasar.doma.Update;
 import org.seasar.doma.boot.ConfigAutowireable;
 
-import com.example.demo.DomaConfig;
-import com.example.demo.repository.entity.User;
-
 /**
  */
-@ConfigAutowireable
 @Dao(config = DomaConfig.class)
+@ConfigAutowireable
 public interface UserDao {
 
     /**

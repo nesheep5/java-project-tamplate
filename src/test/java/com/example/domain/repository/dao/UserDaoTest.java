@@ -1,4 +1,4 @@
-package com.example.demo.repository.dao;
+package com.example.domain.repository.dao;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -103,7 +103,7 @@ public class UserDaoTest extends TestCase {
      * @throws Exception
      */
     public void testSelectById() throws Exception {
-        SqlFile sqlFile = repository.getSqlFile(getMethod(), "META-INF/com/example/demo/repository/dao/UserDao/selectById.sql", dialect);
+        SqlFile sqlFile = repository.getSqlFile(getMethod(), "META-INF/com/example/domain/repository/dao/UserDao/selectById.sql", dialect);
         execute(sqlFile);
     }
 

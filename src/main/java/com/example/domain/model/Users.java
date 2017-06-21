@@ -1,17 +1,16 @@
-package com.example.demo.domain;
+package com.example.domain.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.repository.dao.UserDao;
-import com.example.demo.repository.dao.UserDaoImpl;
-import com.example.demo.repository.entity.User;
+import com.example.domain.repository.dao.UserDao;
+import com.example.domain.repository.entity.User;
 
 @Component
 public class Users {
 
 	@Autowired
-	UserDao userDao = new UserDaoImpl();
+	private UserDao userDao;
 
 	public User getUserById(long id) {
 		return userDao.selectById(id);
